@@ -1,0 +1,121 @@
+# stacc grammar for hp reverse polish calculator
+
+.ext_term
+      NEWLINE
+      EOS
+      ;
+
+expression ->
+      { constant | command }
+      (     NEWLINE.
+         |  EOS.       ? fprintf (stderr, "%c: unrecognized command\n", symbol);
+         )
+      ;
+
+constant ->
+                        ! double ctod();
+                        ! while (symbol == ' ' || symbol == '\t')
+                        !    getsym();
+      '.'               ! push (ctod (line, & scanptr));
+                        ! scanptr--;
+   |  '0' : '9'         ! push (ctod (line, & scanptr));
+                        ! scanptr--;
+      ;
+
+command ->              ! int i;
+                        ! int sound();
+			! double pow(), fmod();
+                        ! while (symbol == ' ' || symbol == '\t')
+                        !    getsym();
+
+      'p'               ! if (sound (1))
+                        !    printf ("%1.1lf\n", stack [sp]);
+
+   |  'P'               ! for (i = 1; i < sp; i++)
+                        !    printf ("%1.1lf\n", stack [i]);
+
+   |  '+'               ! if (sound (2)) {
+                        !    stack [sp - 1] += stack [sp];
+                        !    sp--;
+                        !    }
+
+   |  '-'               ! if (sound (2)) {
+                        !    stack [sp - 1] -= stack [sp];
+                        !    sp--;
+                        !    }
+
+   |  '*'               ! if (sound (2)) {
+                        !    stack [sp - 1] *= stack [sp];
+                        !    sp--;
+                        !    }
+
+   |  '/'               ! if (sound (2)) {
+                        !    stack [sp - 1] /= stack [sp];
+                        !    sp--;
+                        !    }
+
+   |  '%'               ! if (sound (2)) {
+			!    stack [sp - 1] = fmod (stack [sp - 1], stack[sp]);
+			!    sp--;
+			! }
+
+   |  '^'               ! if (sound (2)) {
+                        !    stack [sp - 1] = pow (stack [sp - 1], stack [sp]);
+                        !    sp--;
+                        !    }
+
+   |  'd'               ! if (sound (1))
+                        !    sp--;
+
+   |  'D'               ! sp = 0;
+
+   |  '<'               ! if (sound (2)) {
+                        !    if (stack [sp - 1] < stack [sp])
+                        !       stack [sp - 1] = 1.0;
+                        !    else
+                        !       stack [sp - 1] = 0.0;
+                        !    sp--;
+                        !    }
+
+   |  '='               ! if (sound (2)) {
+                        !    if (stack [sp - 1] == stack [sp])
+                        !       stack [sp - 1] = 1.0;
+                        !    else
+                        !       stack [sp - 1] = 0;
+                        !    sp--;
+                        !    }
+
+   |  '>'               ! if (sound (2)) {
+                        !    if (stack [sp - 1] > stack [sp])
+                        !       stack [sp - 1] = 1.0;
+                        !    else
+                        !       stack [sp - 1] = 0.0;
+                        !    sp--;
+                        !    }
+
+   |  '&'               ! if (sound (2)) {
+                        !    if (stack [sp - 1] != 0.0 && stack [sp] != 0.0)
+                        !       stack [sp - 1] = 1.0;
+                        !    else
+                        !       stack [sp - 1] = 0.0;
+                        !    sp--;
+                        !    }
+
+   |  '|'               ! if (sound (2)) {
+                        !    if (stack [sp - 1] != 0.0 || stack [sp] != 0.0)
+                        !       stack [sp - 1] = 1.0;
+                        !    else
+                        !       stack [sp - 1] = 0.0;
+                        !    sp--;
+                        !    }
+
+   |  '!'               ! if (sound (1))
+                        !    if (stack [sp] != 0.0)
+                        !       stack [sp] = 0.0;
+                        !    else
+                        !       stack [sp] = 1.0;
+
+   | 'q'		! exit (0);
+
+   | 'Q'		! exit (0);
+      ;
