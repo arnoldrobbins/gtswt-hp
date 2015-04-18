@@ -1,0 +1,5 @@
+2015-04-18         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* README, ChangeLog: Created.
+	* st.parse.c, st.parse.h: Recreated using stacc.
+	* hp.1, hp.c, hp.stacc, makefile: Committed to git.

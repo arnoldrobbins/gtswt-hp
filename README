@@ -1,0 +1,19 @@
+Sat Apr 18 22:04:53 IDT 2015
+============================
+
+This is the original port of the Georgia Tech Software Tools Subsystem
+`hp' program to C.  The files are dated November 26, 1985.  This version
+used the Unix port of the STACC (STill Another Compiler Compiler) parser
+generator (see https://github.com/arnoldrobbins/stacc) for its rather
+simple grammar.
+
+The st.parse.c and st.parse.h files were recreated in April 2015 using
+stacc.
+
+I'm making this available in case there are any other GT SWT users
+out there who are interested.  I will make a separate github repo
+for my current version of this program (that I still use!) which
+uses yacc and a simple hand-written scanner.
+
+Arnold Robbins
+arnold@skeeve.com
